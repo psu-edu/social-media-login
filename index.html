@@ -29,10 +29,12 @@
       </style>
 </head>
 <body>
+  
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v22.0&appId=1837823793446991"></script>
 
     <!-- provided by Facebook - JavaScript SDK-->
      <!-- Set the element id for the JSON response -->
-    
       <p id="profile"></p>
 
       <script>
@@ -97,18 +99,17 @@
           });
         }
 
-        //may remove this section if is unnecessary (but only if also remove onclick="FB.login()" from button below
-            // <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
-            // FB.login(function(response) {
-            //           if (response.authResponse) {
-            //                console.log('Welcome!  Fetching your information.... ');
-            //                FB.api('/me', {fields: 'name, email'}, function(response) {
-            //                    document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
-            //                });
-            //           } else { 
-            //                <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
-            //                console.log('User cancelled login or did not fully authorize.'); }
-            // });
+        // <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
+        // FB.login(function(response) {
+        //           if (response.authResponse) {
+        //                console.log('Welcome!  Fetching your information.... ');
+        //                FB.api('/me', {fields: 'name, email'}, function(response) {
+        //                    document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
+        //                });
+        //           } else { 
+        //                <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
+        //                console.log('User cancelled login or did not fully authorize.'); }
+        // });
       </script>
 
 <h1>Login Options</h1>
@@ -117,6 +118,7 @@
 <div style="display: flex; align-items: flex-start; gap: 20px;">
   <div>
     <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="true" data-use-continue-as="false">
+
       <p>Login with Facebook</p>
 
       <!--
