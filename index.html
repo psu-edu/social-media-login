@@ -36,58 +36,79 @@
       <p id="profile"></p>
 
       <script>
-  
-        <!-- Add the Facebook SDK for Javascript -->
-  
-        (function(d, s, id){
-                              var js, fjs = d.getElementsByTagName(s)[0];
-                              if (d.getElementById(id)) {return;}
-                              js = d.createElement(s); js.id = id;
-                              js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v22.0&appId=1837823793446991";
-                              fjs.parentNode.insertBefore(js, fjs);
-                            }(document, 'script', 'facebook-jssdk')
-        );
+        // This is called with the results from from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+          console.log('statusChangeCallback');
+          console.log(response);
+          // The response object is returned with a status field that lets the app know the current login status of the person.
+          // Full docs on the response object can be found in the documentation for FB.getLoginStatus().
+          if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            testAPI();
+          } else {
+            // The person is not logged into your app or we are unable to tell.
+            document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
+          }
+        }
 
+        // This function is called when someone finishes with the Login Button.  
+        // See the onlogin handler attached to it in the sample code below.
+        function checkLoginState() {
+          FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+          });
+        }
 
         window.fbAsyncInit = function() {
-            <!-- Initialize the SDK with your app and the Graph API version for your app -->
-            FB.init({
-                      appId            : '{your-facebook-app-id}',
-                      xfbml            : true,
-                      version          : '{the-graph-api-version-for-your-app}'
-                    });
-            <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
-            FB.login(function(response) {
-                      if (response.authResponse) {
-                           console.log('Welcome!  Fetching your information.... ');
-                           FB.api('/me', {fields: 'name, email'}, function(response) {
-                               document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
-                           });
-                      } else { 
-                           <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
-                           console.log('User cancelled login or did not fully authorize.'); }
-            });
+          FB.init({
+            appId      : '{your-app-id}',
+            cookie     : true,  // enable cookies to allow the server to access the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : '{api-version}' // Specify the Graph API version to use
+          });
+
+        // Now that we've initialized the JavaScript SDK, we call FB.getLoginStatus().  This function gets the state of the
+        // person visiting this page and can return one of three states to the callback you provide.  They can be:
+        // 1. Logged into your app ('connected')
+        // 2. Logged into Facebook, but not your app ('not_authorized')
+        // 3. Not logged into Facebook and can't tell if they are logged into your app or not.
+        // These three cases are handled in the callback function.
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
         };
 
-        // This function is called when the user clicks the login button
-        function checkLoginState() {
-            FB.getLoginStatus(function(response) {
-                statusChangeCallback(response);
-            });
+        // Load the SDK asynchronously
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          //may need to update this url to be specific to web app as this src url is from the example given
+          js.src = "https://connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Here we run a very simple test of the Graph API after login is successful.  See statusChangeCallback() for when this call is made.
+        function testAPI() {
+          console.log('Welcome!  Fetching your information.... ');
+          FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            ocument.getElementById('status').innerHTML ='Thanks for logging in, ' + response.name + '!';
+          });
         }
 
-        // This function is called with the results from FB.getLoginStatus().
-        function statusChangeCallback(response) {
-            if (response.status === 'connected') {
-                // User is logged in and authenticated
-                console.log('Access Token:', response.authResponse.accessToken);
-                // You can now use response.authResponse.userID, etc.
-            } else {
-                // User is not logged in or did not authorize
-                console.log('User not authenticated');
-            }
-        }
-
+        //may remove this section if is unnecessary (but only if also remove onclick="FB.login()" from button below
+            // <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
+            // FB.login(function(response) {
+            //           if (response.authResponse) {
+            //                console.log('Welcome!  Fetching your information.... ');
+            //                FB.api('/me', {fields: 'name, email'}, function(response) {
+            //                    document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
+            //                });
+            //           } else { 
+            //                <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
+            //                console.log('User cancelled login or did not fully authorize.'); }
+            // });
       </script>
 
 <h1>Login Options</h1>
@@ -96,13 +117,22 @@
 <div style="display: flex; align-items: flex-start; gap: 20px;">
   <div>
     <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="true" data-use-continue-as="false">
-      <p>Login with Facebook:</p>
-        <button onclick="FB.login();">Login with Facebook</button>
+      <p>Login with Facebook</p>
+
+      <!--
+      Login Button social plugin provided by FB. This button uses
+      the JavaScript SDK to present a graphical Login button that triggers
+      the FB.login() function when clicked.
+      -->
+        <!-- <button onclick="FB.login();">Login with Facebook</button> -->
+        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+
+        </fb:login-button>
     </div>
   </div>
 
   <div>
-    <p>Or login with Google:</p>
+    <p>Or login with Google</p>
     <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
   </div>
 </div>
