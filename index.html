@@ -1,24 +1,120 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>Social Media Login</title>
-	<style>
-        .resizable-image {
-            max-width: 40%;
-            max-height: 40%;
-            border: 1px solid #000;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <style>
+          .resizable-image {
+              max-width: 20%;
+              max-height: 50px;
+              padding: 10px;
+          }
+          h1 {
+              font-size: 2em;
+              color: steelblue;
+              margin-top: 20px;
+              margin-bottom: 20px;
+          }
+
+          h2 {
+              font-size: 1.5em;
+              color: steelblue;
+              margin-top: 100px;
+              margin-bottom: 20px;
+          }
+
+          body {
+              font-family: Arial, sans-serif;
+              color: darkslategray;
+              margin: 0;
+              padding: 20px;
+          }
+      </style>
 </head>
 <body>
-  <h1>Login Options</h1>
-    <p>Click the buttons below to login with your social media accounts:</p>
-    <button onclick="window.location.href='https://www.facebook.com/v2.3/dialog/oauth?client_id=YOUR_APP_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email,public_profile'">Login with Facebook</button>
-    <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
 
-  <h1>The Columbia River Gorge</h1>
-    <p>Wildflowers and sunset hike with Mt Hood in the distance</p>
-    <img src="https://wk1-assignment-psu-myawsbucket.s3.us-east-2.amazonaws.com/DSC05792.jpg" alt="wildflower hills" class="resizable-image">
-</body>
+    <!-- provided by Facebook - JavaScript SDK-->
+     <!-- Set the element id for the JSON response -->
+    
+      <p id="profile"></p>
+
+      <script>
+  
+        <!-- Add the Facebook SDK for Javascript -->
+  
+        (function(d, s, id){
+                              var js, fjs = d.getElementsByTagName(s)[0];
+                              if (d.getElementById(id)) {return;}
+                              js = d.createElement(s); js.id = id;
+                              js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v22.0&appId=1837823793446991";
+                              fjs.parentNode.insertBefore(js, fjs);
+                            }(document, 'script', 'facebook-jssdk')
+        );
+
+
+        window.fbAsyncInit = function() {
+            <!-- Initialize the SDK with your app and the Graph API version for your app -->
+            FB.init({
+                      appId            : '{your-facebook-app-id}',
+                      xfbml            : true,
+                      version          : '{the-graph-api-version-for-your-app}'
+                    });
+            <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
+            FB.login(function(response) {
+                      if (response.authResponse) {
+                           console.log('Welcome!  Fetching your information.... ');
+                           FB.api('/me', {fields: 'name, email'}, function(response) {
+                               document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
+                           });
+                      } else { 
+                           <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
+                           console.log('User cancelled login or did not fully authorize.'); }
+            });
+        };
+
+        // This function is called when the user clicks the login button
+        function checkLoginState() {
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        // This function is called with the results from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+            if (response.status === 'connected') {
+                // User is logged in and authenticated
+                console.log('Access Token:', response.authResponse.accessToken);
+                // You can now use response.authResponse.userID, etc.
+            } else {
+                // User is not logged in or did not authorize
+                console.log('User not authenticated');
+            }
+        }
+
+      </script>
+
+<h1>Login Options</h1>
+<p><em>Click below to login using an existing social media account:</em></p>
+
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+  <div>
+    <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="true" data-use-continue-as="false">
+      <p>Login with Facebook:</p>
+        <button onclick="FB.login();">Login with Facebook</button>
+    </div>
+  </div>
+
+  <div>
+    <p>Or login with Google:</p>
+    <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
+  </div>
+</div>
+
+<h2>Documentation</h2>
+    <p>This page demonstrates how to implement social media login using Facebook and Google. The Facebook SDK is used to handle the login process, while a simple button is provided for Google login.</p>
+    <p>For more information, visit the <a href="https://developers.facebook.com/docs/facebook-login/web">Facebook Login documentation</a>.</p>
+    <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="Facebook Logo" class="resizable-image">
+
+    <p>For Google login, refer to the <a href="https://developers.google.com/identity/sign-in/web/sign-in">Google Sign-In documentation</a>.</p>
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="resizable-image">
+
+  </body>
 </html>
