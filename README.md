@@ -1,2 +1,5 @@
-# social-media-login
-Social Media Login Service Assignment
+# Social Media Login Service
+
+Implementation Guide
+
+Project URL
