@@ -3,8 +3,8 @@
     <title>Social Media Login</title>
 	<style>
         .resizable-image {
-            max-width: 75%;
-            max-height: 75%;
+            max-width: 25%;
+            max-height: 25%;
             border: 1px solid #000;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -12,12 +12,13 @@
     </style>
 </head>
 <body>
-  <h1>The Columbia River Gorge</h1>
-  <p>Wildflowers and sunset hike with Mt Hood in the distance</p>
-  <img src="https://wk1-assignment-psu-myawsbucket.s3.us-east-2.amazonaws.com/DSC05792.jpg" alt="wildflower hills" class="resizable-image">
+  <h1>Login Options</h1>
+    <p>Click the buttons below to login with your social media accounts:</p>
+    <button onclick="window.location.href='https://www.facebook.com/v2.3/dialog/oauth?client_id=YOUR_APP_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email,public_profile'">Login with Facebook</button>
+    <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
 
-  <p>Login Options</p>
-  <button onclick="window.location.href='https://www.facebook.com/v2.3/dialog/oauth?client_id=YOUR_APP_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email,public_profile'">Login with Facebook</button>
-  <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
+  <h1>The Columbia River Gorge</h1>
+    <p>Wildflowers and sunset hike with Mt Hood in the distance</p>
+    <img src="https://wk1-assignment-psu-myawsbucket.s3.us-east-2.amazonaws.com/DSC05792.jpg" alt="wildflower hills" class="resizable-image">
 </body>
 </html>
