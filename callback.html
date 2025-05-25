@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logging you in...</title>
+</head>
+<body>
+  <script>
+    // Example: handle token or code from URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    // You would now send this info to your backend to complete login
+    console.log('OAuth code:', code);
+    console.log('State:', state);
+  </script>
+  <p>Logging you in... Please wait.</p>
+</body>
+</html>
