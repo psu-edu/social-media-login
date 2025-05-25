@@ -1,0 +1,25 @@
+.resizable-image {
+    max-height: 45px;
+    padding: 10px;
+}
+
+h1 {
+    font-size: 2em;
+    color: steelblue;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: steelblue;
+    margin-top: 100px;
+    margin-bottom: 20px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: darkslategray;
+    margin: 0;
+    padding: 20px;
+}

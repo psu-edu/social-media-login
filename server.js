@@ -1,69 +1,106 @@
+const { google }          = require('googleapis');
+const fs                  = require('fs');
+const path                = require('path');
+const CREDENTIALS_FOLDER  = './';
+const SCOPES              = ['https://www.googleapis.com/auth/gmail.send'];
+
+/* GLOBAL VARIABLES*/
+let credentials;
+
+
+// ----------  OAUTH2 CLIENT ----------------
+// Load client secrets into "credentials"
+try {
+  const files = fs.readdirSync(CREDENTIALS_FOLDER);
+  const credentialsFile = files
+    .find(file => file.startsWith('client_secret_') && file.endsWith('.json'));
+
+  if (!credentialsFile) throw new Error('credentials file not found');
+
+  // const credentialsPath = CREDENTIALS_FOLDER + credentialsFile;
+  const credentialsPath = path.join(__dirname, CREDENTIALS_FOLDER, credentialsFile);
+  const file = fs.readFileSync(credentialsPath, 'utf8');
+  credentials = JSON.parse(file);
+} catch (error) {
+  console.log("unable to read file, can't continue");
+}
+
+// VALIDATE CREDENTIALS 
+const REQUIRED_CREDENTIALS_PROPERTIES = [
+  'client_id',
+  'project_id',
+  'auth_uri',
+  'auth_provider_x509_cert_url',
+  'token_uri',
+  'client_secret',
+  'redirect_uris'
+];
+
+// Ensure all required properties exist
+if (!credentials || !credentials.installed) {
+  throw new Error('credentials or installed not found in credentials');
+}
+
+REQUIRED_CREDENTIALS_PROPERTIES.forEach(prop => {
+  if (!(prop in credentials.installed)) 
+    throw new Error(`Property ${prop} not found in credentials`);
+});
+
+const { installed: { client_id, client_secret, redirect_uris } } = credentials;
+const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+
+let authUrl = oAuth2Client.generateAuthUrl({
+  access_type: 'offline',
+  scope: SCOPES
+});
+
+// ----------  EXPRESS APPLICATION  ----------------
 const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const app     = express();
 
-const app = express();
-
-// Replace with your Google OAuth credentials
-const GOOGLE_CLIENT_ID = '805207106585-cfonbclil4523d7q44f1f9g0dlslgr3u.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = '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';
-
-// Session middleware
-app.use(session({
-    secret: 'your_secret_key',
-    resave: false,
-    saveUninitialized: true
-}));
-
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Configure Passport with Google OAuth
-passport.use(new GoogleStrategy({
-        clientID: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback'
-    },
-    function(accessToken, refreshToken, profile, done) {
-        // Here you would find or create a user in your DB
-        return done(null, profile);
-    }
-));
-
-// Serialize and deserialize user
-passport.serializeUser((user, done) => {
-    done(null, user);
-});
-passport.deserializeUser((user, done) => {
-    done(null, user);
-});
-
-// Routes
 app.get('/', (req, res) => {
-    res.send('<a href="/auth/google">Login with Google</a>');
+  res.send(`<a href="${authUrl}">Authorize</a>`);
 });
 
-app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-        res.send(`Hello, ${req.user.displayName}! <a href="/logout">Logout</a>`);
-    }
-);
-
-app.get('/logout', (req, res) => {
-    req.logout(() => {
-        res.redirect('/');
-    });
+app.get('/oauth2callback', async (req, res) => {
+  const { code } = req.query;
+    const { tokens } = await oAuth2Client.getToken(code);
+    oAuth2Client.setCredentials(tokens);
+    res.redirect('/authenticated');
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.get('/authenticated', (req, res) => {
+  res.send('You are authenticated now!');
+});
+// ----------  EXPRESS FALLBACKS  ----------------
+function notFound(req, res, next) {
+  res.status(404);
+  const error = new Error('Not Found - ' + req.originalUrl);
+  next(error);
+}
+function errorHandler(err, req, res, next) {
+  res.status(res.statusCode || 500);
+  res.json({
+    message: err.message,
+    stack: err.stack
+  });
+}
+app.use(notFound);
+app.use(errorHandler);
+
+// gets the localhost IP address
+var interfaces = require('os').networkInterfaces(), localhostIP;
+for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+        let ipFamily = interfaces[k][k2].family;
+       if ( ipFamily === 'IPv4' || ipFamily === 4 && !interfaces[k][k2].internal) {
+          localhostIP = interfaces[k][k2].address;
+       }
+   }
+}
+
+const port = process.env.PORT || 5000;
+
+app.listen(port, () => {
+    console.log(`Listening on http://${localhostIP}:${port}`);
 });
