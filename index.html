@@ -37,7 +37,11 @@
      <!-- Set the element id for the JSON response -->
       <p id="profile"></p>
 
-      <script>
+      <!-- include google SDK securely -->
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+      <!-- include Facebook SDK securely -->
+      <script async defer crossorigin="anonymous">
         // This is called with the results from from FB.getLoginStatus().
         function statusChangeCallback(response) {
           console.log('statusChangeCallback');
@@ -79,7 +83,6 @@
         FB.getLoginStatus(function(response) {
           statusChangeCallback(response);
         });
-        };
 
         // Load the SDK asynchronously
         (function(d, s, id) {
@@ -100,17 +103,25 @@
           });
         }
 
-        // <!-- If you are logged in, automatically get your name and email adress, your public profile information -->
-        // FB.login(function(response) {
-        //           if (response.authResponse) {
-        //                console.log('Welcome!  Fetching your information.... ');
-        //                FB.api('/me', {fields: 'name, email'}, function(response) {
-        //                    document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
-        //                });
-        //           } else { 
-        //                <!-- If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email -->
-        //                console.log('User cancelled login or did not fully authorize.'); }
-        // });
+        //Implement CSRF protection by using the state parameter in the OAuth flow
+        const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        sessionStorage.setItem('oauth_state', state);
+        // When the user clicks the login button, redirect them to the Google OAuth 2.0 authorization endpoint
+        // Replace YOUR_CLIENT_ID and YOUR_REDIRECT_URI with your actual client ID and redirect URI
+        const redirectUri = 'YOUR_REDIRECT_URI';
+        window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=${redirectUri}&scope=email%20profile&response_type=code&state=${state}`;
+
+        // If you are logged in, automatically get your name and email adress, your public profile information
+        FB.login(function(response) {
+                  if (response.authResponse) {
+                       console.log('Welcome!  Fetching your information.... ');
+                       FB.api('/me', {fields: 'name, email'}, function(response) {
+                           document.getElementById("profile").innerHTML = "Good to see you, " + response.name + ". i see your email address is " + response.email
+                       });
+                  } else {
+                       // If you are not logged in, the login dialog will open for you to login asking for permission to get your public profile and email
+                       console.log('User cancelled login or did not fully authorize.'); }
+        });
       </script>
 
 <h1>Login Options</h1>
