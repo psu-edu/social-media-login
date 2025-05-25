@@ -107,9 +107,8 @@
         const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         sessionStorage.setItem('oauth_state', state);
         // When the user clicks the login button, redirect them to the Google OAuth 2.0 authorization endpoint
-        // Replace YOUR_CLIENT_ID and YOUR_REDIRECT_URI with your actual client ID and redirect URI
-        const redirectUri = 'YOUR_REDIRECT_URI';
-        window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=${redirectUri}&scope=email%20profile&response_type=code&state=${state}`;
+        const redirectUri = 'https://vigilant-barnacle-nr32lo5.pages.github.io/callback.html';
+        window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=805207106585-cfonbclil4523d7q44f1f9g0dlslgr3u.apps.googleusercontent.com&redirect_uri=${redirectUri}&scope=email%20profile&response_type=code&state=${state}`;
 
         // If you are logged in, automatically get your name and email adress, your public profile information
         FB.login(function(response) {
@@ -134,11 +133,13 @@
       <p>Login with Facebook</p>
 
       <!--
-      Login Button social plugin provided by FB. This button uses
-      the JavaScript SDK to present a graphical Login button that triggers
-      the FB.login() function when clicked.
+      Login Button social plugin provided by FB. This button uses the JavaScript SDK 
+      to present a graphical Login button that triggers the FB.login() function when clicked.
       -->
-        <!-- <button onclick="FB.login();">Login with Facebook</button> -->
+        <!-- 
+        Started with this button but may want to remove in place of FB login button provided by Facebook in the SDK
+        <button onclick="FB.login();">Login with Facebook</button> 
+        -->
         <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 
         </fb:login-button>
