@@ -1,4 +1,4 @@
-# Social Media Login Service
+# Social Media Login Service Implementation Guide
 
 Implementation Guide
 
