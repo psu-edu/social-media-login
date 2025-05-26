@@ -98,16 +98,19 @@
         });
       </script>
 
-<h1>Login Options</h1>
-<p><em>Click below to login using an existing social media account:</em></p>
+<div class=loginModal>
 
-<div style="display: flex; align-items: flex-start; gap: 20px;">
-  <div>
-    <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="true" data-use-continue-as="false">
+  <h1>Welcome</h1>
+  <p>To access this site, please log in using your social media account.</p>
 
-      <p>Login with Facebook</p>
+  <div style="display: flex; align-items: flex-start; gap: 20px;">
+    <div>
+      <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout=""
+        data-auto-logout-link="true" data-use-continue-as="false">
 
-      <!--
+        <p>Login with Facebook</p>
+
+        <!--
       Login Button social plugin provided by FB. This button uses the JavaScript SDK 
       to present a graphical Login button that triggers the FB.login() function when clicked.
       -->
@@ -116,29 +119,36 @@
         <button onclick="FB.login();">Login with Facebook</button> 
         -->
         <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-
+          <span class="fb-text">Login with Facebook</span>
         </fb:login-button>
+      </div>
     </div>
-  </div>
 
-  <div>
-    <p>Or login with Google</p>
-    <button onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login with Google</button>
+    <div>
+      <p>Or login with Google</p>
+      <button
+        onclick="window.location.href='https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile&response_type=code'">Login
+        with Google</button>
+    </div>
   </div>
 </div>
 
-<h2>Documentation</h2>
-    <p>This page demonstrates how to implement social media login using Facebook and Google. The Facebook SDK is used to handle the login process, while a simple button is provided for Google login.</p>
-    <div style="display: flex; align-items: center; gap: 40px;">
-      <div>
-        <p>For more information, visit the <a href="https://developers.facebook.com/docs/facebook-login/web">Facebook Login documentation</a>.</p>
-        <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="Facebook Logo" class="resizable-image">
-      </div>
-      <div>
-        <p>For Google login, refer to the <a href="https://developers.google.com/identity/sign-in/web/sign-in">Google Sign-In documentation</a>.</p>
-        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="resizable-image">
-      </div>
+  <h2>Documentation</h2>
+  <p>This page demonstrates how to implement social media login using Facebook and Google. The Facebook SDK is used to
+    handle the login process, while a simple button is provided for Google login.</p>
+  <div style="display: flex; align-items: center; gap: 40px;">
+    <div>
+      <p>For more information, visit the <a href="https://developers.facebook.com/docs/facebook-login/web">Facebook Login
+          documentation</a>.</p>
+      <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="Facebook Logo" class="resizable-image">
     </div>
+    <div>
+      <p>For Google login, refer to the <a href="https://developers.google.com/identity/sign-in/web/sign-in">Google
+          Sign-In documentation</a>.</p>
+      <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo"
+        class="resizable-image">
+    </div>
+  </div>
 
-  </body>
+</body>
 </html>
